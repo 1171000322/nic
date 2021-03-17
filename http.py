@@ -7,15 +7,15 @@ from scapy.error import Scapy_Exception
  
 
 count=0
-map = {'192.168.1.100': '1', '192.168.1.200': '4', '192.168.1.103': '6','192.168.1.207': '8'}
+map = {'192.168.2.10': '1', '192.168.2.11': '2', '192.168.1.103': '6','192.168.1.207': '8'}
 
 def operation(src,dst):
 	if dst in map and src in map:
-		print 'ovs-ofctl add-flow vswitch0 "priority=3,in_port=1,actions=output:'+map[dst]+'"'
-		os.system('ovs-ofctl add-flow vswitch0 "priority=3,in_port='+map[src]+',ip,nw_dst='+str(dst)+',actions=output:'+map[dst]+'"')
-		os.system('ovs-ofctl add-flow vswitch0 "priority=3,in_port='+map[dst]+',ip,nw_dst='+str(src)+',actions=output:'+map[src]+'"')
-		os.system('ovs-ofctl add-flow vswitch0 "priority=3,in_port='+map[src]+',arp,nw_dst='+str(dst)+',actions=output:'+map[dst]+'"')
-		os.system('ovs-ofctl add-flow vswitch0 "priority=3,in_port='+map[dst]+',arp,nw_dst='+str(src)+',actions=output:'+map[src]+'"')
+		print 'ovs-ofctl add-flow br1 "priority=3,in_port=1,actions=output:'+map[dst]+'"'
+		os.system('ovs-ofctl add-flow br1 "priority=3,in_port='+map[src]+',ip,nw_dst='+str(dst)+',actions=output:'+map[dst]+'"')
+		os.system('ovs-ofctl add-flow br1 "priority=3,in_port='+map[dst]+',ip,nw_dst='+str(src)+',actions=output:'+map[src]+'"')
+		os.system('ovs-ofctl add-flow br1 "priority=3,in_port='+map[src]+',arp,nw_dst='+str(dst)+',actions=output:'+map[dst]+'"')
+		os.system('ovs-ofctl add-flow br1 "priority=3,in_port='+map[dst]+',arp,nw_dst='+str(src)+',actions=output:'+map[src]+'"')
 
 def pktTCP(pkt):
 
@@ -64,5 +64,5 @@ def pktTCP(pkt):
     		print pdst
     		operation(psrc,pdst)
        
-sniff(prn=pktTCP,iface='tap5_br')
+sniff(prn=pktTCP,iface='pf0vf3')
 #sniff(filter='arp or tcp',prn=pktTCP,iface='tap5_br')
